@@ -28,7 +28,7 @@ const server = http.createServer((req, res) => {
             res.end(JSON.stringify({ requestNumber, message: messages.wordNotFound(query.word) }));
         }
     } 
-    else if (req.method === 'POST' && pathname === '/api/definitions') {
+    else if (req.method === 'POST' && pathname === '/api/definitions/') {
         let body = '';
         req.on('data', chunk => body += chunk.toString());
         req.on('end', () => {
