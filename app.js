@@ -14,17 +14,17 @@ const server = http.createServer((req, res) => {
 
     if (req.method === 'GET' && pathname === '/api/definitions/') {
         if (!query.word || !/^[a-zA-Z]+$/.test(query.word)) {
-            res.writeHead(400);
+            res.writeHead(400, {"access-control-allow-origin": "*"});
             res.end(JSON.stringify({ error: messages.invalidWord }));
             return;
         }
         const definition = getDefinition(query.word);
         const requestNumber = getRequestCount();
         if (definition) {
-            res.writeHead(200);
+            res.writeHead(200, {"access-control-allow-origin": "*"});
             res.end(JSON.stringify({ requestNumber, word: query.word, definition }));
         } else {
-            res.writeHead(404);
+            res.writeHead(404, {"access-control-allow-origin": "*"});
             res.end(JSON.stringify({ requestNumber, message: messages.wordNotFound(query.word) }));
         }
     } 
@@ -40,16 +40,16 @@ const server = http.createServer((req, res) => {
                 const response = addDefinition(data.word, data.definition);
                 const requestNumber = getRequestCount();
                 const totalEntries = getTotalEntries();
-                res.writeHead(201);
+                res.writeHead(201, {"access-control-allow-origin": "*"});
                 res.end(JSON.stringify({ requestNumber, totalEntries, message: response }));
             } catch (err) {
-                res.writeHead(400);
+                res.writeHead(400, {"access-control-allow-origin": "*"});
                 res.end(JSON.stringify({ error: messages.invalidInput }));
             }
         });
     } 
     else {
-        res.writeHead(404);
+        res.writeHead(404, {"access-control-allow-origin": "*"});
         res.end(JSON.stringify({ error: messages.endpointNotFound }));
     }
 });
