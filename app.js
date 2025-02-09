@@ -8,23 +8,35 @@ const { addDefinition, getDefinition, getRequestCount, getTotalEntries } = requi
 
 const PORT = process.env.PORT || 3000;
 const server = http.createServer((req, res) => {
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+        // Handle preflight request
+        res.writeHead(204); // No content for OPTIONS
+        res.end();
+        return;
+    }
+
     const parsedUrl = url.parse(req.url, true);
     const { pathname, query } = parsedUrl;
     res.setHeader('Content-Type', 'application/json');
 
     if (req.method === 'GET' && pathname === '/api/definitions/') {
         if (!query.word || !/^[a-zA-Z]+$/.test(query.word)) {
-            res.writeHead(400, {"access-control-allow-origin": "*"});
+            res.writeHead(400);
             res.end(JSON.stringify({ error: messages.invalidWord }));
             return;
         }
         const definition = getDefinition(query.word);
         const requestNumber = getRequestCount();
         if (definition) {
-            res.writeHead(200, {"access-control-allow-origin": "*"});
+            res.writeHead(200);
             res.end(JSON.stringify({ requestNumber, word: query.word, definition }));
         } else {
-            res.writeHead(404, {"access-control-allow-origin": "*"});
+            res.writeHead(404);
             res.end(JSON.stringify({ requestNumber, message: messages.wordNotFound(query.word) }));
         }
     } 
@@ -40,16 +52,16 @@ const server = http.createServer((req, res) => {
                 const response = addDefinition(data.word, data.definition);
                 const requestNumber = getRequestCount();
                 const totalEntries = getTotalEntries();
-                res.writeHead(201, {"access-control-allow-origin": "*"});
+                res.writeHead(201);
                 res.end(JSON.stringify({ requestNumber, totalEntries, message: response }));
             } catch (err) {
-                res.writeHead(400, {"access-control-allow-origin": "*"});
+                res.writeHead(400);
                 res.end(JSON.stringify({ error: messages.invalidInput }));
             }
         });
     } 
     else {
-        res.writeHead(404, {"access-control-allow-origin": "*"});
+        res.writeHead(404);
         res.end(JSON.stringify({ error: messages.endpointNotFound }));
     }
 });
