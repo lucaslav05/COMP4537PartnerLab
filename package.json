@@ -1,7 +1,7 @@
 {
     "name": "my-node-app",
     "version": "20.18.0",
-    "main": "server.js",
+    "main": "app.js",
     "scripts": {
         "start": "node app.js"
     }
