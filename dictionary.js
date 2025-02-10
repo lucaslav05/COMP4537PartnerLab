@@ -1,5 +1,7 @@
 //ChatGPT Used to help debug code.
 
+const messages = require('./lang/en/en');
+
 let dictionary = [];
 let requestCount = 0;
 
@@ -7,10 +9,10 @@ function addDefinition(word, definition) {
     requestCount++;
     const existingEntry = dictionary.find(entry => entry.word.toLowerCase() === word.toLowerCase());
     if (existingEntry) {
-        return `Warning! '${word}' already exists.`;
+        return messages.entryExists(word);
     }
     dictionary.push({ word, definition });
-    return `New entry recorded: '${word} : ${definition}'`;
+    return messages.newEntry(word, definition);
 }
 
 function getDefinition(word) {
